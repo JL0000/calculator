@@ -1,19 +1,19 @@
-function add(a, b) {
+export function add(a, b) {
     return a + b;
 }
 
-function substract(a, b) {
+export function subtract(a, b) {
     return a - b;
 }
 
-function multiply(a, b) {
+export function multiply(a, b) {
     return a * b;
 }
 
-function divide(a, b) {
+export function divide(a, b) {
     return a / b;
 }
 
-function operate(func, a, b) {
+export function operate(func, a, b) {
     return func(a, b);
 }

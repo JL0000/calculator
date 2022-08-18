@@ -1,8 +1,9 @@
 let displayValue = ""
+let inputArr = []
 
 const idToChar = {
     "add": "+",
-    "subsctract": "-",
+    "subtract": "-",
     "multiply": "*",
     "divide": "/", 
     "period": ".",
@@ -24,13 +25,88 @@ buttons.forEach(button => button.addEventListener("click", input));
 
 function input(e) {
     const c = e.target.id
-    if (c !== "equals" && c !== "clear") {   
-        displayValue += e.target.innerHTML
+    if (c === "clear") {
+        updateDisplay();
+        clearValues();
+    }
+    else if (c === "equals") {
+        const result = getResult(inputArr);
+        updateDisplay(result)
+        clearValues();
+    }
+    else {   
+        displayValue += e.target.innerHTML;
+        inputArr.push(idToChar[e.target.id]);
         updateDisplay(displayValue);
     }
-    else updateDisplay();
+}
+
+function getResult(arr) {
+    const lastEle = arr.length - 1;
+    let total = 0;
+    let operand = "";
+    return arr.reduce((prevValue, curr, i) => {
+        console.log(i, total, prevValue);
+        if (i === lastEle) {
+            prevValue += curr;
+            return getOperation(operand, total, Number(prevValue));
+        }
+        else if (isNaN(curr)) {
+            if (!operand) {
+                total = Number(prevValue);
+            }
+            else { 
+                total = getOperation(operand, total, Number(prevValue));
+            }
+            operand = curr;
+            return ""
+        }
+        else {
+            return prevValue += curr;
+        }
+    })
+}
+
+function getOperation(operand, a, b) {
+    if (operand === "+") {    
+        return operate(add, a, b)
+    }
+    else if (operand === "-") {    
+        return operate(subtract, a, b)
+    }
+    else if (operand === "*") {    
+        return operate(multiply, a, b)
+    }
+    else {    
+        return operate(divide, a, b)
+    }
 }
 
 function updateDisplay(displayValue = "") {
     document.getElementById("display-output").innerHTML = displayValue;
+}
+
+function clearValues() {
+    displayValue = ""
+    inputArr = []
+}
+
+function add(a, b) {
+    return a + b;
+}
+
+function subtract(a, b) {
+    return a - b;
+}
+
+function multiply(a, b) {
+    return a * b;
+}
+
+function divide(a, b) {
+    return a / b;
+}
+
+function operate(operation, a, b) {
+    return operation(a, b);
 }
