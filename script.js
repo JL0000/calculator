@@ -42,29 +42,34 @@ function input(e) {
 }
 
 function getResult(arr) {
-    const lastEle = arr.length - 1;
-    let total = 0;
-    let operand = "";
-    return arr.reduce((prevValue, curr, i) => {
-        console.log(i, total, prevValue);
-        if (i === lastEle) {
-            prevValue += curr;
-            return getOperation(operand, total, Number(prevValue));
-        }
-        else if (isNaN(curr)) {
-            if (!operand) {
-                total = Number(prevValue);
+    try{
+        const lastEle = arr.length - 1;
+        let total = 0;
+        let operand = "";
+        return arr.reduce((prevValue, curr, i) => {
+            if (i === lastEle) {
+                prevValue += curr;
+                return getOperation(operand, total, Number(prevValue));
             }
-            else { 
-                total = getOperation(operand, total, Number(prevValue));
+            else if (isNaN(curr)) {
+                if (!operand) {
+                    total = Number(prevValue);
+                }
+                else { 
+                    total = getOperation(operand, total, Number(prevValue));
+                }
+                operand = curr;
+                return ""
             }
-            operand = curr;
-            return ""
-        }
-        else {
-            return prevValue += curr;
-        }
-    })
+            else {
+                return prevValue += curr;
+            }
+        })
+    }
+    catch(err) {
+        return err;
+    }
+
 }
 
 function getOperation(operand, a, b) {
@@ -77,7 +82,10 @@ function getOperation(operand, a, b) {
     else if (operand === "*") {    
         return operate(multiply, a, b)
     }
-    else {    
+    else {
+        if (b === 0) {
+            throw "Undefined :("
+        }    
         return operate(divide, a, b)
     }
 }
